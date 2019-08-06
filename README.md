@@ -93,3 +93,16 @@ http://base_url/frete/origem_destino?type=dia [GET]
 type (dia, semana, mes).
 Parametro opcional. Default dia.
 ```
+
+## Test
+Na raiz do projeto execute:
+
+```bash
+vendor/bin/phpunit tests/TestCase/Model/Table/MotoristaTableTest.php
+```
+```bash
+vendor/bin/phpunit tests/TestCase/Model/Table/VeiculoTableTest.php
+```
+```bash
+vendor/bin/phpunit tests/TestCase/Model/Table/FreteTableTest.php
+```
