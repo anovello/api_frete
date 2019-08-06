@@ -1,51 +1,95 @@
-# CakePHP Application Skeleton
+# API FRETE
 
-[![Build Status](https://img.shields.io/travis/cakephp/app/master.svg?style=flat-square)](https://travis-ci.org/cakephp/app)
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
+PHP >= 7.2
+MySQL
+Composer
 
-A skeleton for creating applications with [CakePHP](https://cakephp.org) 3.x.
+## Instalação
 
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+1. Clone o projeto.
+2. Na raiz do projeto execute `composer install`.
+3. Crie o banco de dados que está dentro da pasta database.
+4. Crie um banco de dados vazio com o nome de truckpad_test
+5. Em config/app.php "Datasources" ajuste a configuração do banco "default" para o usuario e senha correto.
+6. Configure também a conexão "test".
 
-## Installation
+## Inclusão de Motorista
+http://base_url/motorista [POST]
 
-1. Download [Composer](https://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
-
-If Composer is installed globally, run
-
+### Parâmetros
 ```bash
-composer create-project --prefer-dist cakephp/app
+{
+	"nome": "String obrigatório",
+	"cpf": "Obrigatório e único",
+	"data_nascimento": "Obrigatório - Data padrão d/m/Y, idade > 18 e <= 65",
+	"tipo_cnh": "Obrigatório - Use 'B', 'C', 'D' ou 'E'",
+	"sexo": "Obrigatório - Use 'm' ou 'f'"
+}
 ```
 
-In case you want to use a custom app dir name (e.g. `/myapp/`):
+## Alteração de Motorista
+http://base_url/motorista [PUT]
 
+### Parâmetros
 ```bash
-composer create-project --prefer-dist cakephp/app myapp
+{
+	"id": "Obrigatório"
+	"nome": "String opcional",
+	"cpf": "Opcional e único",
+	"data_nascimento": "Opcional padrão d/m/Y, idade > 18 e <= 65",
+	"tipo_cnh": "Opcional 'B', 'C', 'D' ou 'E'",
+	"sexo": "Opcional 'm' ou 'f'"
+}
 ```
 
-You can now either use your machine's webserver to view the default home page, or start
-up the built-in webserver with:
+## Inclusão de Veículos
+http://base_url/veiculo [POST]
 
+### Parâmetros
 ```bash
-bin/cake server -p 8765
+{
+  "motorista_id": "Opcional, INT.",
+  "placa": "Obrigatório e único",
+  "marca": "Obrigatório - String",
+  "modelo": "Obrigatório - String",
+  "veiculo_tipo_id": "Obrigatório - ID conforme tabela enviada."
+}
 ```
 
-Then visit `http://localhost:8765` to see the welcome page.
+## Inclusão de Frete
+http://base_url/frete [POST]
 
-## Update
+### Parâmetros
+```bash
+{
+  "motorista_id": "Obrigatório, INT",
+  "veiculo_id": "Obrigatório, INT",
+  "lat_destino": "Obrigatório, Latitude",
+  "lng_destino": "Obrigatório, Longitude",
+  "lat_origem": "Obrigatório, Latitude",
+  "lng_origem": "Obrigatório, Longitude",
+  "tempo": "Obrigatório, INT minutos",
+  "distancia": "Obrigatório, INT KM"
+}
+```
 
-Since this skeleton is a starting point for your application and various files
-would have been modified as per your needs, there isn't a way to provide
-automated upgrades, so you have to do any updates manually.
+## Consulta camioneiro sem carga para voltar
+http://base_url/frete/carga_voltar [GET]
 
-## Configuration
+## Consulta cargas realizada por período
+http://base_url/frete/qtd_frete?type=dia [GET]
 
-Read and edit `config/app.php` and setup the `'Datasources'` and any other
-configuration relevant for your application.
+### Parâmetros
+```bash
+type (dia, semana, mes).
+Parametro opcional. Default dia.
+```
 
-## Layout
+## Consulta origem destino ordernado por tipo(Caminhão)
+http://base_url/frete/origem_destino?type=dia [GET]
 
-The app skeleton uses a subset of [Foundation](http://foundation.zurb.com/) (v5) CSS
-framework by default. You can, however, replace it with any other library or
-custom styles.
+### Parâmetros
+```bash
+type (dia, semana, mes).
+Parametro opcional. Default dia.
+```
