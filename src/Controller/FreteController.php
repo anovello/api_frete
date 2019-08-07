@@ -76,7 +76,7 @@ class FreteController extends AppController
             if ($this->Frete->save($frete)) {
                 $ret['success'] = true;
                 $ret['message'] = 'Frete cadastrado com sucesso.';
-                $ret['codigo_motorista'] = $frete->id;
+                $ret['frete_id'] = $frete->id;
             } else {
                 $ret['errors'] = $frete->errors();
             }

@@ -26,12 +26,13 @@ class ApiOpenCageComponent extends Component
 
     public function getLatLng($lat, $lng) {
     	$result = $this->Geocoder->geocode($lat.','.$lng);
-    	
+        
     	$msg = $result['status']['message'];
 		if ($msg == 'OK'){
+            $ret = $result['results'][0]['components'];
 			return [
-				'cidade' => strtoupper($result['results'][0]['components']['city']),
-				'estado' => strtoupper($result['results'][0]['components']['state_code'])
+				'cidade' => isset($ret['city']) ? strtoupper($ret['city']) : strtoupper($ret['town']),
+				'estado' => strtoupper($ret['state_code'])
 			];
 		} else {
 			return false;
