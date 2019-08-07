@@ -11,7 +11,36 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Copiando dados para a tabela truckpad.frete: ~8 rows (aproximadamente)
+
+-- Copiando estrutura do banco de dados para truckpad
+CREATE DATABASE IF NOT EXISTS `truckpad` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `truckpad`;
+
+-- Copiando estrutura para tabela truckpad.frete
+CREATE TABLE IF NOT EXISTS `frete` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `motorista_id` int(11) NOT NULL,
+  `veiculo_id` int(11) NOT NULL,
+  `lat_origem` float NOT NULL DEFAULT 0,
+  `lng_origem` float NOT NULL DEFAULT 0,
+  `cidade_origem` varchar(100) NOT NULL DEFAULT '',
+  `estado_origem` varchar(100) NOT NULL DEFAULT '',
+  `lat_destino` float NOT NULL DEFAULT 0,
+  `lng_destino` float NOT NULL DEFAULT 0,
+  `cidade_destino` varchar(100) NOT NULL DEFAULT '',
+  `estado_destino` varchar(100) NOT NULL DEFAULT '',
+  `tempo` int(11) NOT NULL,
+  `distancia` int(11) NOT NULL,
+  `frete_id_ida` int(11) NOT NULL DEFAULT 0,
+  `data` date NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_frete_motorista` (`motorista_id`),
+  KEY `FK_frete_veiculo` (`veiculo_id`),
+  CONSTRAINT `FK_frete_motorista` FOREIGN KEY (`motorista_id`) REFERENCES `motorista` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_frete_veiculo` FOREIGN KEY (`veiculo_id`) REFERENCES `veiculo` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+
+-- Copiando dados para a tabela truckpad.frete: ~9 rows (aproximadamente)
 /*!40000 ALTER TABLE `frete` DISABLE KEYS */;
 INSERT INTO `frete` (`id`, `motorista_id`, `veiculo_id`, `lat_origem`, `lng_origem`, `cidade_origem`, `estado_origem`, `lat_destino`, `lng_destino`, `cidade_destino`, `estado_destino`, `tempo`, `distancia`, `frete_id_ida`, `data`) VALUES
 	(4, 11, 2, -23.618, -46.6439, 'SãO PAULO', 'SP', -22.9733, -49.8568, 'OURINHOS', 'SP', 300, 375, 0, '2019-07-06'),
@@ -24,6 +53,18 @@ INSERT INTO `frete` (`id`, `motorista_id`, `veiculo_id`, `lat_origem`, `lng_orig
 	(11, 100, 3, -23.618, -46.6439, 'SãO PAULO', 'SP', -22.9733, -49.8568, 'RIO DE JANEIRO', 'SP', 300, 375, 0, '2019-08-06'),
 	(12, 100, 3, -23.618, -46.6439, 'SãO PAULO', 'SP', -22.9733, -49.8568, 'OURINHOS', 'SP', 300, 375, 0, '2019-08-06');
 /*!40000 ALTER TABLE `frete` ENABLE KEYS */;
+
+-- Copiando estrutura para tabela truckpad.motorista
+CREATE TABLE IF NOT EXISTS `motorista` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL DEFAULT '',
+  `data_nascimento` date NOT NULL,
+  `sexo` char(1) NOT NULL DEFAULT '',
+  `tipo_cnh` char(4) NOT NULL DEFAULT '',
+  `cpf` varchar(11) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `cpf` (`cpf`)
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=latin1;
 
 -- Copiando dados para a tabela truckpad.motorista: ~52 rows (aproximadamente)
 /*!40000 ALTER TABLE `motorista` DISABLE KEYS */;
@@ -82,6 +123,21 @@ INSERT INTO `motorista` (`id`, `nome`, `data_nascimento`, `sexo`, `tipo_cnh`, `c
 	(111, 'Len', '2000-05-18', 'm', 'E', '15283456307');
 /*!40000 ALTER TABLE `motorista` ENABLE KEYS */;
 
+-- Copiando estrutura para tabela truckpad.veiculo
+CREATE TABLE IF NOT EXISTS `veiculo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `motorista_id` int(11) DEFAULT NULL,
+  `placa` varchar(7) NOT NULL DEFAULT '',
+  `marca` varchar(50) NOT NULL DEFAULT '',
+  `modelo` varchar(50) NOT NULL DEFAULT '',
+  `veiculo_tipo_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK__motorista` (`motorista_id`),
+  KEY `FK__veiculo_tipo` (`veiculo_tipo_id`),
+  CONSTRAINT `FK__motorista` FOREIGN KEY (`motorista_id`) REFERENCES `motorista` (`id`),
+  CONSTRAINT `FK__veiculo_tipo` FOREIGN KEY (`veiculo_tipo_id`) REFERENCES `veiculo_tipo` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
 -- Copiando dados para a tabela truckpad.veiculo: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `veiculo` DISABLE KEYS */;
 INSERT INTO `veiculo` (`id`, `motorista_id`, `placa`, `marca`, `modelo`, `veiculo_tipo_id`) VALUES
@@ -91,7 +147,14 @@ INSERT INTO `veiculo` (`id`, `motorista_id`, `placa`, `marca`, `modelo`, `veicul
 	(5, NULL, 'ZZZ1Z00', 'IVENCO', 'IVENCO', 4);
 /*!40000 ALTER TABLE `veiculo` ENABLE KEYS */;
 
--- Copiando dados para a tabela truckpad.veiculo_tipo: ~4 rows (aproximadamente)
+-- Copiando estrutura para tabela truckpad.veiculo_tipo
+CREATE TABLE IF NOT EXISTS `veiculo_tipo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+-- Copiando dados para a tabela truckpad.veiculo_tipo: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `veiculo_tipo` DISABLE KEYS */;
 INSERT INTO `veiculo_tipo` (`id`, `nome`) VALUES
 	(1, 'Caminhão 3/4'),
